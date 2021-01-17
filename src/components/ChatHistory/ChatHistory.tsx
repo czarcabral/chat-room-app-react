@@ -1,12 +1,13 @@
 import { Component } from "react";
+import { Msg } from "../../common/types";
 
 interface ChatHistoryProps {
-  chatHistory: any;
+  chatHistory: Msg[];
 }
 
 class ChatHistory extends Component<ChatHistoryProps> {
   render() {
-    const messages = this.props.chatHistory.map((msg: any, index: number) => (
+    const messages = this.props.chatHistory.map((msg: Msg, index: number) => (
       <p key={index}>{msg.data}</p>
     ));
 

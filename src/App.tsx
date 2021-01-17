@@ -3,11 +3,12 @@ import './App.css';
 import { connect, sendMsg } from "./api";
 import Header from './components/Header/Header';
 import ChatHistory from "./components/ChatHistory/ChatHistory";
+import { Msg } from "./common/types";
 
 interface AppProps {
 }
 interface AppState {
-  chatHistory: any;
+  chatHistory: Msg[];
 }
 
 class App extends Component<AppProps, AppState> {
@@ -24,11 +25,11 @@ class App extends Component<AppProps, AppState> {
     console.log(this.state);
 
     // pass callback function to our connect function
-    connect((msg: string) => {
+    connect((msg: Msg) => {
       console.log("New Message");
 
       // when message is received from server, change App state to append msg to end of chatHistory
-      this.setState(prevState => ({
+      this.setState(_ => ({
         chatHistory: [...this.state.chatHistory, msg],
       }))
       console.log(this.state);
