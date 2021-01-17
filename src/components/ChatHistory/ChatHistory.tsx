@@ -1,8 +1,12 @@
 import { Component } from "react";
 
-class ChatHistory extends Component {
+interface ChatHistoryProps {
+  chatHistory: any;
+}
+
+class ChatHistory extends Component<ChatHistoryProps> {
   render() {
-    const messages = this.props.chatHistory.map((msg, index) => (
+    const messages = this.props.chatHistory.map((msg: any, index: number) => (
       <p key={index}>{msg.data}</p>
     ));
 
