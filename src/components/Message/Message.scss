@@ -1,24 +1,47 @@
-.Message {
+.text-body {
   display: block;
-  background-color: white;
-  margin: 10px auto;
-  box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.2);
   padding: 10px 20px;
   border-radius: 5px;
+  box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.2);
+}
+
+.Message {
+  display: block;
+  margin: 10px auto;
   clear: both;
 
   &.me {
-    color: white;
     float: right;
-    background-color: #328ec4;
+
+    .text-body {
+      color: white;
+      background-color: #328ec4;
+    }
   }
   &.you {
-    color: white;
     float: left;
-    background-color: gray;
+
+    .text-body {
+      color: white;
+      background-color: gray;
+    }
   }
+
   &.system {
-    color: gray;
-    background-color: white;
+    color: rgb(192, 192, 192);
+    background-color: #f7f7f7;
+
+    .text-body {
+      padding: 0 20px;
+      box-shadow: 0 0;
+    }
   }
+}
+
+.username {
+  display: block;
+  color: gray;
+  background-color: #f7f7f7;
+  font-size:smaller;
+  margin: 0 0 5px 0;
 }

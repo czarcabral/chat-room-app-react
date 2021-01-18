@@ -7,6 +7,8 @@ interface MessageProps {
 }
 interface MessageState {
   message: ChatMessage;
+  username: string;
+  isEditingUsername: boolean;
 }
 interface ChatMessage {
   body: string;
@@ -18,17 +20,55 @@ class Message extends Component<MessageProps, MessageState> {
     super(props);
     // let message: ChatMessage = JSON.parse(this.props.wsMsgData);
     let message = (({ body, fromClientId }) => ({ body, fromClientId }))(JSON.parse(this.props.wsMsgData));
+    let username = "User " + message.fromClientId;
     this.state = {
-      message: message
+      message: message,
+      username: username,
+      isEditingUsername: false,
+    }
+  }
+
+  editUsername = () => {
+    this.setState({isEditingUsername: true});
+  }
+
+  saveUsername = (event: any) => {
+    this.setState({ username: event.target.value, isEditingUsername: false });
+  }
+
+  handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      this.saveUsername(event);
     }
   }
 
   render() {
-    const isMyMessage = this.props.clientId === this.state.message.fromClientId;
-    const isSystemMessage = this.state.message.fromClientId === 0;
+    let messageType;
+    switch (this.state.message.fromClientId) {
+      case 0 :
+        messageType = "system";
+        break;
+      case this.props.clientId :
+        messageType = "me";
+        break;
+      default :
+        messageType = "you";
+    }
     return (
-      <div className={` Message ${isMyMessage ? "me" : (isSystemMessage ? "system" : "you")}`}>
-        {isSystemMessage ? `` : `User ${this.state.message.fromClientId}: `}{this.state.message.body}
+      <div className={`Message ${messageType}`} onClick={this.editUsername}>
+        {messageType !== "system" &&
+          (this.state.isEditingUsername && messageType === 'me'
+            ? <span className="username">
+                <input autoFocus
+                  defaultValue={this.state.username}
+                  onBlur={this.saveUsername}
+                  onKeyDown={this.handleKeyDown}
+                />
+              </span>
+            : <span className="username">{this.state.username}</span>
+          )
+        }
+        <span className="text-body">{this.state.message.body}</span>
       </div>
     )
   }
