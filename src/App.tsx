@@ -25,7 +25,6 @@ class App extends Component<AppProps, AppState> {
 
   // when component mounts, open socket connection to server
   componentDidMount() {
-    console.log(this.state);
 
     // pass callback function to our connect function
     connect((wsMsg: WSMsg) => {
@@ -40,7 +39,6 @@ class App extends Component<AppProps, AppState> {
       this.setState(_ => ({
         chatHistory: [...this.state.chatHistory, wsMsg], // makes a copy of current Chat History and adds new wsMsg to end
       }))
-      console.log(this.state);
     })
   }
 
@@ -61,10 +59,7 @@ class App extends Component<AppProps, AppState> {
       const newWsMsg: WSMsg = { data: JSON.stringify(data) };
       chatHistoryCopy.push(newWsMsg);
     }
-    console.log("right before", this.state.chatHistory, chatHistoryCopy);
-    this.setState({chatHistory: [...chatHistoryCopy]}, () => {
-      console.log("right after", this.state.chatHistory);
-    });
+    this.setState({chatHistory: [...chatHistoryCopy]}, () => {});
   }
 
   render() {

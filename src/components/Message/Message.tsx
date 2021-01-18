@@ -20,7 +20,6 @@ class Message extends Component<MessageProps, MessageState> {
   constructor(props: any) {
     super(props);
     let message: ChatMessage = (({ body, fromClientId, username }) => ({ body, fromClientId, username }))(JSON.parse(this.props.wsMsgData));
-    console.log("props changed");
     this.state = {
       message: message,
       isEditingUsername: false,
