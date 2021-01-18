@@ -7,13 +7,13 @@ import "./ChatHistory.scss";
 interface ChatHistoryProps {
   chatHistory: WSMsg[];
   clientId: number;
+  editUsername: any;
 }
 
 class ChatHistory extends Component<ChatHistoryProps> {
   render() {
     const messages = this.props.chatHistory.map((wsMsg: WSMsg, index: number) => (
-      // <p key={index}>{wsMsg.data}</p>
-      <Message key={index} wsMsgData={wsMsg.data} clientId={this.props.clientId} />
+      <Message key={index} wsMsgData={wsMsg.data} clientId={this.props.clientId} editUsername={this.props.editUsername} />
     ));
 
     return (

@@ -4,28 +4,31 @@ import "./Message.scss"
 interface MessageProps {
   wsMsgData: string;
   clientId: number;
+  editUsername: any;
 }
 interface MessageState {
   message: ChatMessage;
-  username: string;
   isEditingUsername: boolean;
 }
 interface ChatMessage {
   body: string;
   fromClientId: number;
+  username: string;
 }
 
 class Message extends Component<MessageProps, MessageState> {
   constructor(props: any) {
     super(props);
-    // let message: ChatMessage = JSON.parse(this.props.wsMsgData);
-    let message = (({ body, fromClientId }) => ({ body, fromClientId }))(JSON.parse(this.props.wsMsgData));
-    let username = "User " + message.fromClientId;
+    let message: ChatMessage = (({ body, fromClientId, username }) => ({ body, fromClientId, username }))(JSON.parse(this.props.wsMsgData));
+    console.log("props changed");
     this.state = {
       message: message,
-      username: username,
       isEditingUsername: false,
     }
+  }
+
+  componentWillReceiveProps(nextProps: MessageProps) {
+    this.setState({ message: (({ body, fromClientId, username }) => ({ body, fromClientId, username }))(JSON.parse(nextProps.wsMsgData))})
   }
 
   editUsername = () => {
@@ -33,7 +36,8 @@ class Message extends Component<MessageProps, MessageState> {
   }
 
   saveUsername = (event: any) => {
-    this.setState({ username: event.target.value, isEditingUsername: false });
+    this.props.editUsername(event.target.value);
+    this.setState({ isEditingUsername: false });
   }
 
   handleKeyDown = (event: any) => {
@@ -54,18 +58,22 @@ class Message extends Component<MessageProps, MessageState> {
       default :
         messageType = "you";
     }
+    let username = "User " + this.state.message.fromClientId;
+    if (this.state.message.username) {
+      username = this.state.message.username;
+    }
     return (
       <div className={`Message ${messageType}`} onClick={this.editUsername}>
         {messageType !== "system" &&
           (this.state.isEditingUsername && messageType === 'me'
             ? <span className="username">
                 <input autoFocus
-                  defaultValue={this.state.username}
+                  defaultValue={username}
                   onBlur={this.saveUsername}
                   onKeyDown={this.handleKeyDown}
                 />
               </span>
-            : <span className="username">{this.state.username}</span>
+            : <span className="username">{username}</span>
           )
         }
         <span className="text-body">{this.state.message.body}</span>

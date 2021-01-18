@@ -51,11 +51,27 @@ class App extends Component<AppProps, AppState> {
     }
   }
 
+  editUsername = (newUsername: string) => {
+    const chatHistoryCopy: WSMsg[] = [];
+    for (const wsMsg of this.state.chatHistory) {
+      const data = JSON.parse(wsMsg.data);
+      if (data.fromClientId === this.state.clientId) {
+        data.username = newUsername;
+      }
+      const newWsMsg: WSMsg = { data: JSON.stringify(data) };
+      chatHistoryCopy.push(newWsMsg);
+    }
+    console.log("right before", this.state.chatHistory, chatHistoryCopy);
+    this.setState({chatHistory: [...chatHistoryCopy]}, () => {
+      console.log("right after", this.state.chatHistory);
+    });
+  }
+
   render() {
     return (
       <div className="App">
         <Header />
-        <ChatHistory chatHistory={this.state.chatHistory} clientId={this.state.clientId} />
+        <ChatHistory chatHistory={this.state.chatHistory} clientId={this.state.clientId} editUsername={this.editUsername} />
         <ChatInput send={this.send} />
       </div>
     );
