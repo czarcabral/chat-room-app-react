@@ -1,7 +1,7 @@
 import { Component } from "react";
 
 interface ChatInputProps {
-  send: any;
+  send: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 class ChatInput extends Component<ChatInputProps> {

@@ -4,6 +4,7 @@ import { connect, sendMsg } from "./api";
 import Header from './components/Header/Header';
 import ChatHistory from "./components/ChatHistory/ChatHistory";
 import { Msg } from "./common/types";
+import ChatInput from "./components/ChatInput/ChatInput";
 
 interface AppProps {
 }
@@ -36,9 +37,11 @@ class App extends Component<AppProps, AppState> {
     })
   }
 
-  send = () => {
-    console.log("hello");
-    sendMsg("hello");
+  send = (event: any) => {
+    if (event.keyCode === 13) {
+      sendMsg(event.target.value);
+      event.target.value="";
+    }
   }
 
   render() {
@@ -46,7 +49,7 @@ class App extends Component<AppProps, AppState> {
       <div className="App">
         <Header />
         <ChatHistory chatHistory={this.state.chatHistory} />
-        <button onClick={this.send}>Hit</button>
+        <ChatInput send={this.send} />
       </div>
     );
   }
