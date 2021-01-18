@@ -1,3 +1,3 @@
-export interface Msg {
+export interface WSMsg {
   data: string;
 }

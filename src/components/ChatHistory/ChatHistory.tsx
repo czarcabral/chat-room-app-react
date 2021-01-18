@@ -1,14 +1,19 @@
 import { Component } from "react";
-import { Msg } from "../../common/types";
+import { WSMsg } from "../../common/types";
+import Message from "../Message/Message";
+
+import "./ChatHistory.scss";
 
 interface ChatHistoryProps {
-  chatHistory: Msg[];
+  chatHistory: WSMsg[];
+  clientId: number;
 }
 
 class ChatHistory extends Component<ChatHistoryProps> {
   render() {
-    const messages = this.props.chatHistory.map((msg: Msg, index: number) => (
-      <p key={index}>{msg.data}</p>
+    const messages = this.props.chatHistory.map((wsMsg: WSMsg, index: number) => (
+      // <p key={index}>{wsMsg.data}</p>
+      <Message key={index} wsMsgData={wsMsg.data} clientId={this.props.clientId} />
     ));
 
     return (

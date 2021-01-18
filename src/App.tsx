@@ -3,13 +3,14 @@ import './App.css';
 import { connect, sendMsg } from "./api";
 import Header from './components/Header/Header';
 import ChatHistory from "./components/ChatHistory/ChatHistory";
-import { Msg } from "./common/types";
+import { WSMsg } from "./common/types";
 import ChatInput from "./components/ChatInput/ChatInput";
 
 interface AppProps {
 }
 interface AppState {
-  chatHistory: Msg[];
+  chatHistory: WSMsg[];
+  clientId: number;
 }
 
 class App extends Component<AppProps, AppState> {
@@ -17,6 +18,7 @@ class App extends Component<AppProps, AppState> {
     super(props);
     this.state = {
       chatHistory: [],
+      clientId: 0,
     }
     // this.send = this.send.bind(this);
   }
@@ -26,12 +28,17 @@ class App extends Component<AppProps, AppState> {
     console.log(this.state);
 
     // pass callback function to our connect function
-    connect((msg: Msg) => {
-      console.log("New Message");
+    connect((wsMsg: WSMsg) => {
+      let msg = JSON.parse(wsMsg.data);
 
-      // when message is received from server, change App state to append msg to end of chatHistory
+      // if message is about registering a new user, assign this app's (client's) id
+      if (msg.newClientId > 0) {
+        this.setState({ clientId: msg.newClientId })
+      }
+
+      // when message is received from server, change App state to append wsMsg to end of chatHistory
       this.setState(_ => ({
-        chatHistory: [...this.state.chatHistory, msg],
+        chatHistory: [...this.state.chatHistory, wsMsg], // makes a copy of current Chat History and adds new wsMsg to end
       }))
       console.log(this.state);
     })
@@ -48,7 +55,7 @@ class App extends Component<AppProps, AppState> {
     return (
       <div className="App">
         <Header />
-        <ChatHistory chatHistory={this.state.chatHistory} />
+        <ChatHistory chatHistory={this.state.chatHistory} clientId={this.state.clientId} />
         <ChatInput send={this.send} />
       </div>
     );
