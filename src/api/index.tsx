@@ -1,3 +1,5 @@
+import { WSMsg } from "../common/types";
+
 // this is a 2 way connection to backend
 let socket = new WebSocket("ws://localhost:8080/ws");
 
@@ -11,9 +13,9 @@ export var connect = (cb: Function) => {
   }
 
   // when this client receives a message from the server
-  socket.onmessage = msg => {
-    console.log(msg);
-    cb(msg);
+  socket.onmessage = (wsMsg: WSMsg) => {
+    console.log(wsMsg);
+    cb(wsMsg);
   }
 
   // when the connection closes

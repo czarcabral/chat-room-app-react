@@ -1,33 +1,22 @@
 import { Component } from "react";
+import { ChatMessage } from "../../common/types";
 import "./Message.scss"
 
 interface MessageProps {
-  wsMsgData: string;
-  clientId: number;
+  chatMessage: ChatMessage;
   editUsername: any;
 }
 interface MessageState {
-  message: ChatMessage;
   isEditingUsername: boolean;
-}
-interface ChatMessage {
-  body: string;
-  fromClientId: number;
-  username: string;
 }
 
 class Message extends Component<MessageProps, MessageState> {
+
   constructor(props: any) {
     super(props);
-    let message: ChatMessage = (({ body, fromClientId, username }) => ({ body, fromClientId, username }))(JSON.parse(this.props.wsMsgData));
     this.state = {
-      message: message,
       isEditingUsername: false,
     }
-  }
-
-  componentWillReceiveProps(nextProps: MessageProps) {
-    this.setState({ message: (({ body, fromClientId, username }) => ({ body, fromClientId, username }))(JSON.parse(nextProps.wsMsgData))})
   }
 
   editUsername = () => {
@@ -35,7 +24,7 @@ class Message extends Component<MessageProps, MessageState> {
   }
 
   saveUsername = (event: any) => {
-    this.props.editUsername(event.target.value);
+    // this.props.editUsername(event.target.value);
     this.setState({ isEditingUsername: false });
   }
 
@@ -47,19 +36,12 @@ class Message extends Component<MessageProps, MessageState> {
 
   render() {
     let messageType;
-    switch (this.state.message.fromClientId) {
-      case 0 :
-        messageType = "system";
-        break;
-      case this.props.clientId :
-        messageType = "me";
-        break;
-      default :
-        messageType = "you";
-    }
-    let username = "User " + this.state.message.fromClientId;
-    if (this.state.message.username) {
-      username = this.state.message.username;
+    if (this.props.chatMessage.username && this.props.chatMessage.isOwner) {
+      messageType = "me";
+    } else if (this.props.chatMessage.username) {
+      messageType = "you";
+    } else {
+      messageType = "system";
     }
     return (
       <div className={`Message ${messageType}`} onClick={this.editUsername}>
@@ -67,15 +49,15 @@ class Message extends Component<MessageProps, MessageState> {
           (this.state.isEditingUsername && messageType === 'me'
             ? <span className="username">
                 <input autoFocus
-                  defaultValue={username}
+                  defaultValue={this.props.chatMessage.username}
                   onBlur={this.saveUsername}
                   onKeyDown={this.handleKeyDown}
                 />
               </span>
-            : <span className="username">{username}</span>
+            : <span className="username">{this.props.chatMessage.username}</span>
           )
         }
-        <span className="text-body">{this.state.message.body}</span>
+        <span className="text-body">{this.props.chatMessage.message}</span>
       </div>
     )
   }
