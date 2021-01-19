@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { HttpMessage, WSMsg } from "../../common/types";
+import { HttpMessage } from "../../common/types";
 import Message from "../Message/Message";
 
 import "./ChatHistory.scss";

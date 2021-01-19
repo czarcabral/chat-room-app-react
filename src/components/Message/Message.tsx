@@ -24,7 +24,7 @@ class Message extends Component<MessageProps, MessageState> {
   }
 
   saveUsername = (event: any) => {
-    // this.props.editUsername(event.target.value);
+    this.props.editUsername(event.target.value);
     this.setState({ isEditingUsername: false });
   }
 
