@@ -30,9 +30,10 @@ export var connect = (cb: Function) => {
 }
 
 // this is to send messages to backend
-let sendMsg = (msg: string) => {
+// note socket.send() must take in string as parameter
+let sendMsg = (msg: any) => {
   console.log("sending msg: ", msg);
-  socket.send(msg);
+  socket.send(JSON.stringify(msg));
 }
 
 export { sendMsg }

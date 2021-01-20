@@ -3,7 +3,7 @@ import './App.css';
 import { connect, sendMsg } from "./api";
 import Header from './components/Header/Header';
 import ChatHistory from "./components/ChatHistory/ChatHistory";
-import { HttpMessage, WSMsg } from "./common/types";
+import { HttpMessage, WSMsg, MyOutgoingMessage, ChatEventType } from "./common/types";
 import ChatInput from "./components/ChatInput/ChatInput";
 
 interface AppProps {
@@ -37,21 +37,31 @@ class App extends Component<AppProps, AppState> {
 
   send = (event: any) => {
     if (event.keyCode === 13) {
-      sendMsg(event.target.value);
+      const outgoingMessage: MyOutgoingMessage = {
+        chatEventType: ChatEventType.Default,
+        value: event.target.value,
+      }
+      sendMsg(outgoingMessage);
       event.target.value="";
     }
   }
 
   editUsername = (newUsername: string) => {
-    const chatHistoryCopy = [...this.state.chatHistory];
-    for (const httpMessage of chatHistoryCopy) {
-      const chatMessage = httpMessage.body;
-      if (chatMessage.isOwner) {
-        chatMessage.username = newUsername;
-      }
+    // const chatHistoryCopy = [...this.state.chatHistory];
+    // for (const httpMessage of chatHistoryCopy) {
+    //   const chatMessage = httpMessage.body;
+    //   if (chatMessage.isOwner) {
+    //     chatMessage.username = newUsername;
+    //   }
+    // }
+    // // this.setState({chatHistory: [...chatHistoryCopy]}, () => {});
+    // this.setState({chatHistory: chatHistoryCopy}, () => {});
+    const outgoingMessage: MyOutgoingMessage = {
+      chatEventType: ChatEventType.UsernameChange,
+      newUsername: newUsername,
     }
-    // this.setState({chatHistory: [...chatHistoryCopy]}, () => {});
-    this.setState({chatHistory: chatHistoryCopy}, () => {});
+    sendMsg(outgoingMessage);
+
   }
 
   render() {
