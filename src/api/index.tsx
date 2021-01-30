@@ -1,7 +1,7 @@
 import { WSMsg } from "../common/types";
 
 // this is a 2 way connection to backend
-let socket = new WebSocket("ws://localhost:8080/ws");
+let socket = new WebSocket("ws://chat-room-app-go.herokuapp.com/ws");
 
 // this is to receive messages from backend
 export var connect = (cb: Function) => {
